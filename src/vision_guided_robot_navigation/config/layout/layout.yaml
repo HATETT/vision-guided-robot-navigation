@@ -1,0 +1,8 @@
+# src/mindray_automation_2/config/layout/layout.yaml
+tripods:
+  unloading: 2       # количество штативов для загрузки пробирок
+  loading: 3         # количество штативов для выгрузки пробирок
+
+racks:
+  loading_zone: 4     # количество позиций рэков в зоне загрузки
+  unloading_zone: 8   # количество позиций рэков в зоне выгрузки

@@ -1,0 +1,31 @@
+# src/mindray_automation_2/orchestration/runtime/robots/protocol/__init__.py
+
+from .register_maps import (
+    PROTOCOL_VERSION,
+
+    LOADER_NR_NUMBERS,
+    LOADER_NR_VALUES,
+    LOADER_SR_NUMBERS,
+    LOADER_ITERATION_NAMES,
+
+    UNLOADER_NR_NUMBERS,
+    UNLOADER_NR_VALUES,
+    UNLOADER_SR_NUMBERS,
+    UNLOADER_ITERATION_NAMES,
+)
+
+
+__all__ = [
+    # Protocol
+    "PROTOCOL_VERSION",
+
+    "LOADER_NR_NUMBERS",
+    "LOADER_NR_VALUES",
+    "LOADER_SR_NUMBERS",
+    "LOADER_ITERATION_NAMES",
+
+    "UNLOADER_NR_NUMBERS",
+    "UNLOADER_NR_VALUES",
+    "UNLOADER_SR_NUMBERS",
+    "UNLOADER_ITERATION_NAMES",
+]
