@@ -1,11 +1,11 @@
 # src/vision_guided_robot_navigation/config/unloader/unloader.yaml
 unloader:
   ip: "192.168.124.4"
-  robot_program_name: "unloader_robot"
+  robot_program_name: "vision_guided_navigation"
   name: "Unloader_robot"
 
-  # scanner:
-  #   ip: "192.168.124.5"
-  #   port: 6000
-  #   name: "unloader_hikrobot_scanner"
-  #   timeout: 2.5
+  scanner:
+    ip: "192.168.124.5"
+    port: 6000
+    name: "unloader_hikrobot_scanner"
+    timeout: 2.5

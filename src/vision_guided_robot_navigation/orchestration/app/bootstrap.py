@@ -4,7 +4,6 @@ import logging
 import time
 from typing import Dict
 
-from src.vision_guided_robot_navigation.config import load_alert_config
 from src.vision_guided_robot_navigation.orchestration.app.shutdown import shutdown
 
 from src.vision_guided_robot_navigation.logging import (
@@ -117,6 +116,10 @@ def run_workcell() -> None:
     unloading_tripods_list, loading_tripods_list, rack_manager = build_layout(
         logger=loggers["system"]
     )
+
+    for tripod in loading_tripods_list:
+        tripod.availability = True
+        tripod.set_tubes(0)
 
     # 3. оздаем потоки управления состояниями триподов
     unloader_tripods_by_name, unloader_tripod_thread = build_tripod_refresher(

@@ -28,16 +28,15 @@ import random
 def generate_tube_coordinates():
     """
     Генерирует словарь tube_coordinates со случайными значениями для тестов.
-    Первые три координаты (x, y, z) - целые числа от 0 до 50.
-    Вторые три координаты (a, b, c) - числа с плавающей точкой от 0 до 30.
+    Все координаты - числа с плавающей точкой.
     """
     tube_coordinates = {
-        "x": random.randint(0, 50),      # целое число от 0 до 50
-        "y": random.randint(0, 50),      # целое число от 0 до 50
-        "z": random.randint(0, 50),      # целое число от 0 до 50
-        "a": round(random.uniform(0, 30), 1),  # float с 1 знаком после запятой
-        "b": round(random.uniform(0, 30), 1),  # float с 1 знаком после запятой
-        "c": round(random.uniform(0, 30), 1)   # float с 1 знаком после запятой
+        "x": float(random.randint(-50, 50) + 300),      # float
+        "y": float(random.randint(-50, 50)),            # float
+        "z": float(random.randint(-50, 50) + 300),      # float
+        "a": round(random.uniform(-20, 20), 1),         # уже float
+        "b": round(random.uniform(-20, 20), 1),         # уже float
+        "c": round(random.uniform(-20, 20), 1) + 90     # уже float
     }
     return tube_coordinates
 
@@ -63,6 +62,17 @@ class UnloaderRobotThread(BaseRobotThread):
         self.unloader_tripods = unloader_tripods
         self.unloader_tripods_thread = unloader_tripods_thread
         self.cfg = unloader_cfg
+
+
+        self.unloader_robot.set_pose_register(
+            pr_id=9,
+            x_val=0,
+            y_val=0,
+            z_val=0,
+            a_val=0,
+            b_val=0,
+            c_val=0,
+        )
 
     def _iteration_unload(self, *, unloader_available_tripod: str | None, tube_coordinates: dict[str, float]) -> None:
         """
@@ -90,7 +100,7 @@ class UnloaderRobotThread(BaseRobotThread):
 
         # 3.2 Записываем роботу координаты пробирки в свале
         self.unloader_robot.set_pose_register(
-            register_id=UNLOADER_PR_NUMBERS.tube_dump,
+            pr_id=UNLOADER_PR_NUMBERS.tube_dump,
             x_val=tube_coordinates["x"],
             y_val=tube_coordinates["y"],
             z_val=tube_coordinates["z"],
@@ -99,12 +109,28 @@ class UnloaderRobotThread(BaseRobotThread):
             c_val=tube_coordinates["c"],
         )
 
+        data_str = (
+            f"{tube_coordinates['x']:08.3f} "
+            f"{tube_coordinates['y']:08.3f} "
+            f"{tube_coordinates['z']:08.3f} "
+            f"{tube_coordinates['a']:08.3f} "
+            f"{tube_coordinates['b']:08.3f} "
+            f"{tube_coordinates['c']:08.3f}"
+        )
+
         # 3.3. Определяем оставшиеся точки назначения робота
+        print(unloader_available_tripod)
         tripod_number = int(unloader_available_tripod)
         tripod_place_number = self.unloader_tripods[unloader_available_tripod].get_tubes()
         data_str = (                                                                            # Формируем пакет данных в виде строки роботу
             f"{tripod_number:02d} "
-            f"{tripod_place_number:02d}"
+            f"{tripod_place_number:02d} "
+            f"{tube_coordinates['x']:07.3f} "
+            f"{tube_coordinates['y']:07.3f} "
+            f"{tube_coordinates['z']:07.3f} "
+            f"{tube_coordinates['a']:07.3f} "
+            f"{tube_coordinates['b']:07.3f} "
+            f"{tube_coordinates['c']:07.3f}"
         )
         self.unloader_robot.set_string_register(UNLOADER_SR_NUMBERS.unloader_data, data_str)     # Отправляем роботу строку с данными
 
@@ -114,12 +140,17 @@ class UnloaderRobotThread(BaseRobotThread):
             self.logger.info(f"Отдана команда на исполнение итерации {UNLOADER_ITERATION_NAMES.unloading}!") 
 
             # 3.5. Ждем пока робот физически уберет пробирку из рэка
+            # while not self.unloader_robot.get_number_register(UNLOADER_NR_NUMBERS.grip_status) == UNLOADER_NR_VALUES.grip_good:
+            #     self.logger.info(f"Ожидание извлечения пробирки из свала...") 
+            #     time.sleep(0.5)
+
+
             self.logger.info(f"Ожидание извлечения пробирки из свала...") 
             self.wait_until(
                 lambda: self.unloader_robot.get_number_register(
                     UNLOADER_NR_NUMBERS.grip_status
                 ) == UNLOADER_NR_VALUES.grip_good,
-                timeout=10.0,
+                timeout=600.0,
                 reason="Ожидание grip_status == grip_good"
             )
 
@@ -130,7 +161,7 @@ class UnloaderRobotThread(BaseRobotThread):
                     UNLOADER_NR_NUMBERS.grip_status
                 )
                 == UNLOADER_NR_VALUES.grip_bad,
-                timeout=10.0,
+                timeout=600.0,
                 reason="Ожидание grip_status == grip_bad"
             )
             self.logger.info(f"Пробирка успешно установлена в штатив {tripod_number} в позицию {tripod_place_number}")
@@ -143,7 +174,7 @@ class UnloaderRobotThread(BaseRobotThread):
                     UNLOADER_NR_NUMBERS.iteration_starter
                 )
                 == UNLOADER_NR_VALUES.end,
-                timeout=10.0,
+                timeout=600.0,
                 reason="Ожидание iteration_starter == end"
             )
             self.logger.info(f"Команда на завершение итерации получена!")
@@ -176,9 +207,6 @@ class UnloaderRobotThread(BaseRobotThread):
                 # 1. Определяем основные параемтры для определения типа итерации                                                 
                 unloader_available_tripod = self.unloader_tripods_thread.get_available_tripod_name()    # Нахождение доступного трипода
                 tube_coordinates = generate_tube_coordinates()
-
-                # Заглушка
-                tube_coordinates = True
 
                 if tube_coordinates:
                     current_iteration_type = UNLOADER_ITERATION_NAMES.unloading

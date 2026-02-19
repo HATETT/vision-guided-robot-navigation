@@ -17,8 +17,8 @@ class UnloaderNRValues:
     start: int = 1
     reset: int = 0
     end: int = 2
-    grip_good: int = 1
-    grip_bad: int = 2
+    grip_good: int = 2
+    grip_bad: int = 3
     grip_reset: int = 0
     move_start: int = 1
     move_stop: int = 0
@@ -30,7 +30,7 @@ class UnloaderSRNumbers:
     
 @dataclass(frozen=True)
 class UnloaderPRNumbers:
-   tube_dump : int = 1
+   tube_dump : int = 8
 
 @dataclass(frozen=True)
 class UnloaderSRValues:

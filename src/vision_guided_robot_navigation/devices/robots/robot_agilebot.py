@@ -204,7 +204,13 @@ class RobotAgilebot(CellRobot):
     def set_pose_register(self, pr_id: int, x_val:int|float, y_val:int|float, z_val:int|float, a_val:int|float, b_val:int|float, c_val:int|float):
         pose_register = PoseRegister()
         posture = Posture()
-        posture.arm_back_front = 1
+        posture.arm_back_front = 0
+        posture.arm_up_down = 0
+        posture.wrist_flip = 0
+        posture.arm_left_right = 0
+
+
+        pose_register.poseRegisterData.posture = posture
         pose_register.id = pr_id
         pose_register.poseRegisterData.pt = PoseType.CART
         pose_register.poseRegisterData.cartData.position.x = x_val
