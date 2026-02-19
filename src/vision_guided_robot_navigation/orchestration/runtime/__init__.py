@@ -1,4 +1,4 @@
-# src/mindray_automation_2/orchestration/runtime/__init__.py
+# src/vision_guided_robot_navigation/orchestration/runtime/__init__.py
 from .read_sensor import read_sensor
 from .sensors import SensorAccess
 from .tripods import (
@@ -11,15 +11,9 @@ from .robots import (
     IterationContext, 
     GuardResult,
 
-    LoaderRobotThread,
     UnloaderRobotThread,
 
     PROTOCOL_VERSION,
-
-    LOADER_NR_NUMBERS,
-    LOADER_NR_VALUES,
-    LOADER_SR_NUMBERS,
-    LOADER_ITERATION_NAMES,
 
     UNLOADER_NR_NUMBERS,
     UNLOADER_NR_VALUES,
@@ -43,7 +37,6 @@ __all__ = [
 
     # Threads
     "BaseRobotThread",
-    "LoaderRobotThread",
     "UnloaderRobotThread",
 
     # Iterations 
@@ -52,11 +45,6 @@ __all__ = [
 
     # Protocol
     "PROTOCOL_VERSION",
-
-    "LOADER_NR_NUMBERS",
-    "LOADER_NR_VALUES",
-    "LOADER_SR_NUMBERS",
-    "LOADER_ITERATION_NAMES",
 
     "UNLOADER_NR_NUMBERS",
     "UNLOADER_NR_VALUES",

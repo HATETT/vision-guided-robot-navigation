@@ -1,4 +1,4 @@
-# src/mindray_automation_2/orchestration/runtime/sensors.py
+# src/vision_guided_robot_navigation/orchestration/runtime/sensors.py
 from typing import Callable
 
 class SensorAccess:

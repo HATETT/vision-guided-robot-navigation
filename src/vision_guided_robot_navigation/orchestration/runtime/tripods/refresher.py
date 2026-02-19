@@ -1,10 +1,10 @@
-# src/mindray_automation_2/orchestration/runtime/tripods/refresher.py
+# src/vision_guided_robot_navigation/orchestration/runtime/tripods/refresher.py
 import threading
 import time
 import logging
 from typing import Dict
 
-from src.mindray_automation_2.domain import Tripod, LoadingTripod, UnloadingTripod
+from src.vision_guided_robot_navigation.domain import Tripod, LoadingTripod, UnloadingTripod
 
 class TripodRefresher(threading.Thread):
     """

@@ -1,3 +1,4 @@
+# src/vision_guided_robot_navigation/devices/__init__.py
 from .base import Robot, DeviceError, ConnectionError, RobotIO, RobotRegisters, CellRobot, Scanner
 from .robots import RobotAgilebot
 

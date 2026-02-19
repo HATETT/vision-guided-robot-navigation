@@ -1,7 +1,7 @@
-# src/mindray_automation_2/orchestration/runtime/read_sensor.py
+# src/vision_guided_robot_navigation/orchestration/runtime/read_sensor.py
 from __future__ import annotations
-from src.mindray_automation_2.domain import SensorConfig, RobotRole
-from src.mindray_automation_2.devices import CellRobot
+from src.vision_guided_robot_navigation.domain import SensorConfig, RobotRole
+from src.vision_guided_robot_navigation.devices import CellRobot
 
 def read_sensor(sensor: SensorConfig, robots: dict[RobotRole, CellRobot]) -> bool:
     """

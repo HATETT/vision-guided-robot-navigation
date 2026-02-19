@@ -1,4 +1,4 @@
-# src/mindray_automation_2/orchestration/runtime/robots/__init__.py
+# src/vision_guided_robot_navigation/orchestration/runtime/robots/__init__.py
 
 """
 Логика исполнения роботизированных операций.
@@ -19,18 +19,12 @@ from .base_robot_thread import (
 from .protocol import (
     PROTOCOL_VERSION,
 
-    LOADER_NR_NUMBERS,
-    LOADER_NR_VALUES,
-    LOADER_SR_NUMBERS,
-    LOADER_ITERATION_NAMES,
-
     UNLOADER_NR_NUMBERS,
     UNLOADER_NR_VALUES,
     UNLOADER_SR_NUMBERS,
     UNLOADER_ITERATION_NAMES,
 )
 
-from .loader_thread import LoaderRobotThread
 from .unloader_thread import UnloaderRobotThread
 
 from .errors import (
@@ -42,7 +36,6 @@ from .errors import (
 __all__ = [
     # Threads
     "BaseRobotThread",
-    "LoaderRobotThread",
     "UnloaderRobotThread",
 
     # Iterations 
@@ -51,11 +44,6 @@ __all__ = [
 
     # Protocol
     "PROTOCOL_VERSION",
-
-    "LOADER_NR_NUMBERS",
-    "LOADER_NR_VALUES",
-    "LOADER_SR_NUMBERS",
-    "LOADER_ITERATION_NAMES",
 
     "UNLOADER_NR_NUMBERS",
     "UNLOADER_NR_VALUES",

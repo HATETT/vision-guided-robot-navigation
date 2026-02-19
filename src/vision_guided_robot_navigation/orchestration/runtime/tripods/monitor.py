@@ -1,4 +1,4 @@
-# src/mindray_automation_2/orchestration/runtime/tripods/monitor.py
+# src/vision_guided_robot_navigation/orchestration/runtime/tripods/monitor.py
 from __future__ import annotations
 
 import threading
@@ -6,9 +6,9 @@ import time
 import logging
 from typing import Dict
 
-from src.mindray_automation_2.domain import Tripod, SensorConfig, RobotRole
-from src.mindray_automation_2.devices import CellRobot
-from src.mindray_automation_2.orchestration.runtime import read_sensor
+from src.vision_guided_robot_navigation.domain import Tripod, SensorConfig, RobotRole
+from src.vision_guided_robot_navigation.devices import CellRobot
+from src.vision_guided_robot_navigation.orchestration.runtime import read_sensor
 
 class TripodMonitor(threading.Thread):
     """

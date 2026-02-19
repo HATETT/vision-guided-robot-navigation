@@ -1,4 +1,4 @@
-# src/mindray_automation_2/config/layout/layout.yaml
+# src/vision_guided_robot_navigation/config/layout/layout.yaml
 tripods:
   unloading: 2       # количество штативов для загрузки пробирок
   loading: 3         # количество штативов для выгрузки пробирок

@@ -1,4 +1,4 @@
-# domain/sensors.py
+# src/vision_guided_robot_navigation/domain/sensors.py
 from dataclasses import dataclass
 from enum import Enum
 from typing import Literal

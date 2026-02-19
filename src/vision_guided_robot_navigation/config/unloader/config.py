@@ -1,46 +1,43 @@
-# src/mindray_automation_2/config/loader/config.py
+# src/vision_guided_robot_navigation/config/unloader/config.py
 from dataclasses import dataclass
 from pathlib import Path
 import yaml
 
 
-CONFIG_PATH = Path(__file__).with_name("loader.yaml")
-
+CONFIG_PATH = Path(__file__).with_name("unloader.yaml")
 
 @dataclass(frozen=True)
-class LoaderScannerConfig:
+class UnloaderScannerConfig:
     ip: str
     port: int
     name: str
     timeout: float
 
-
 @dataclass(frozen=True)
-class LoaderConfig:
+class UnloaderConfig:
     ip: str                 # IP робота-загрузчика
     name: str               # имя робота (логическое)
     robot_program_name: str # имя программы на контроллере
-    scanner: LoaderScannerConfig
+    scanner: UnloaderScannerConfig
 
-
-def load_loader_config(path: Path | None = None) -> LoaderConfig:
+def load_unloader_config(path: Path | None = None) -> UnloaderConfig:
     cfg_path = path or CONFIG_PATH
     with cfg_path.open("r", encoding="utf-8") as f:
         raw = yaml.safe_load(f)
 
-    loader_raw = raw["loader"]
-    scanner_raw = loader_raw["scanner"]
+    unloader_raw = raw["unloader"]
+    scanner_raw = unloader_raw["scanner"]
 
-    scanner = LoaderScannerConfig(
+    scanner = UnloaderScannerConfig(
         ip=scanner_raw["ip"],
         port=int(scanner_raw["port"]),
         name=scanner_raw["name"],
         timeout=float(scanner_raw["timeout"]),
     )
 
-    return LoaderConfig(
-        ip=loader_raw["ip"],
-        name=loader_raw["name"],
-        robot_program_name=loader_raw["robot_program_name"],
+    return UnloaderConfig(
+        ip=unloader_raw["ip"],
+        name=unloader_raw["name"],
+        robot_program_name=unloader_raw["robot_program_name"],
         scanner=scanner,
     )

@@ -1,4 +1,4 @@
-# devices/base.py
+# src/vision_guided_robot_navigation/devices/base.py
 from abc import ABC, abstractmethod
 
 class DeviceError(Exception):
@@ -45,6 +45,8 @@ class RobotRegisters(ABC):
     def get_number_register(self, register_id: int) -> int | float: ...
     @abstractmethod
     def set_number_register(self, register_id: int, value: int | float) -> None: ...
+    @abstractmethod
+    def set_pose_register(self, register_id: int, x_val: int | float, y_val: int | float, z_val: int | float, a_val: int | float, b_val: int | float, c_val: int | float) -> None: ...
 
 
 class CellRobot(Robot, RobotIO, RobotRegisters, ABC):

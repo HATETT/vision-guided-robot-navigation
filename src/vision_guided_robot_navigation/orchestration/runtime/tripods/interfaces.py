@@ -1,4 +1,4 @@
-# src/mindray_automation_2/orchestration/runtime/tripods/intefaces.py
+# src/vision_guided_robot_navigation/orchestration/runtime/tripods/intefaces.py
 from __future__ import annotations
 from typing import Protocol
 

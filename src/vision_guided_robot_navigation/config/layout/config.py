@@ -1,8 +1,7 @@
-# src/mindray_automation_2/config/layout/config.py
+# src/vision_guided_robot_navigation/config/layout/config.py
 from dataclasses import dataclass
 from pathlib import Path
 import yaml
-
 
 @dataclass
 class SystemLayoutConfig:
@@ -10,7 +9,6 @@ class SystemLayoutConfig:
     loading_tripods: int
     racks_in_loading_zone: int
     racks_in_unloading_zone: int
-
 
 def load_system_layout_config(path: Path | None = None) -> SystemLayoutConfig:
     if path is None:

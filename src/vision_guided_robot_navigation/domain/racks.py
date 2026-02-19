@@ -1,4 +1,4 @@
-# domain/racks.py
+# src/vision_guided_robot_navigation/domain/racks.py
 from enum import Enum
 from typing import Dict, Optional, Tuple, List
 import random

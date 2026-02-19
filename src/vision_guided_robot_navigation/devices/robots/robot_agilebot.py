@@ -1,4 +1,4 @@
-# devices/robots/robot_agilebot.py
+# src/vision_guided_robot_navigation/devices/robots/robot_agilebot.py
 from Agilebot.IR.A.arm import Arm
 from Agilebot.IR.A.status_code import StatusCodeEnum
 from Agilebot.IR.A.sdk_types import SignalType, SignalValue
@@ -201,7 +201,7 @@ class RobotAgilebot(CellRobot):
             self._check_status(ret)
 
     @require_connection
-    def set_pose_register(self, pr_id: int, x_val:int|float, y_val:int|float, z_val:int|float):
+    def set_pose_register(self, pr_id: int, x_val:int|float, y_val:int|float, z_val:int|float, a_val:int|float, b_val:int|float, c_val:int|float):
         pose_register = PoseRegister()
         posture = Posture()
         posture.arm_back_front = 1
@@ -210,6 +210,9 @@ class RobotAgilebot(CellRobot):
         pose_register.poseRegisterData.cartData.position.x = x_val
         pose_register.poseRegisterData.cartData.position.y = y_val
         pose_register.poseRegisterData.cartData.position.z = z_val
+        pose_register.poseRegisterData.cartData.position.a = a_val
+        pose_register.poseRegisterData.cartData.position.b = b_val
+        pose_register.poseRegisterData.cartData.position.c = c_val
         ret = self.arm.register.write_PR(pose_register)
         self._check_status(ret)
 

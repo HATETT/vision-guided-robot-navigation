@@ -1,3 +1,4 @@
+# src/vision_guided_robot_navigation/domain/tripods.py
 from typing import Optional
 
 class Tripod:

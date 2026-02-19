@@ -1,4 +1,4 @@
-# src/mindray_automation_2/orchestration/runtime/tripods/__init__.py
+# src/vision_guided_robot_navigation/orchestration/runtime/tripods/__init__.py
 from .interfaces import TripodAvailabilityProvider
 from .monitor import TripodMonitor
 from .refresher import TripodRefresher

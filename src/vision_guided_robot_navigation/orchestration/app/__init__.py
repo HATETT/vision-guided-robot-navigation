@@ -1,4 +1,4 @@
-# src/mindray_automation_2/orchestration/app/__init__.py
+# src/vision_guided_robot_navigation/orchestration/app/__init__.py
 from .bootstrap import run_workcell
 
 __all__ = [

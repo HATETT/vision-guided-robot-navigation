@@ -1,4 +1,4 @@
-# src/mindray_automation_2/logging/exception_hooks.py
+# src/vision_guided_robot_navigation/logging/exception_hooks.py
 import sys
 import threading
 import logging

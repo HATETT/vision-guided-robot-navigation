@@ -1,4 +1,4 @@
-# src/mindray_automation_2/orchestration/runtime/robots/base_robot_thread.py
+# src/vision_guided_robot_navigation/orchestration/runtime/robots/base_robot_thread.py
 from __future__ import annotations
 
 import threading
@@ -7,15 +7,14 @@ import logging
 from dataclasses import dataclass
 from enum import Enum
 from typing import Callable, TYPE_CHECKING, TypeVar
-from src.mindray_automation_2.orchestration.runtime.robots.errors.iteration_exceptions import(
+from src.vision_guided_robot_navigation.orchestration.runtime.robots.errors.iteration_exceptions import(
     IterationStopped,
     IterationTimeout,
     IterationAbort
 )
 if TYPE_CHECKING:
-    from src.mindray_automation_2.devices import CellRobot
+    from src.vision_guided_robot_navigation.devices import CellRobot
 T = TypeVar("T")
-
 
 @dataclass(frozen=True)
 class IterationContext:
@@ -24,12 +23,10 @@ class IterationContext:
     starter_nr: int
     starter_reset: int
 
-
 class GuardResult(Enum):
     OK = "ok"
     SKIP = "skip"      # timeout/abort → пропустить итерацию и продолжить главный цикл
     STOP = "stop"      # stopped → выйти из потока
-
 
 class BaseRobotThread(threading.Thread):
     """
@@ -51,8 +48,6 @@ class BaseRobotThread(threading.Thread):
         robot.stop_all_running_programms()
         robot.reset_errors()
         robot.start_program(program_name)
-
-
 
     def wait_until(
         self,
