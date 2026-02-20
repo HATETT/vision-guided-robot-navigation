@@ -15,10 +15,8 @@ VISION_HOST = os.getenv("VISION_HOST", "127.0.0.1")
 VISION_PORT = int(os.getenv("VISION_PORT", "8010"))
 VISION_HEALTH_URL = f"http://{VISION_HOST}:{VISION_PORT}/health"
 
-# Как запускается vision в py313 env:
-# python -m src.vision_service.app  (или vision_service.app — как упакуешь)
-VISION_MODULE = os.getenv("VISION_MODULE", "src.vision_service.app")
-
+# Запускается vision в py313 env:
+VISION_MODULE = os.getenv("VISION_MODULE", "vision_service.orchestration.app.bootstrap")
 
 def _start_vision() -> subprocess.Popen:
     cmd = [
@@ -27,17 +25,39 @@ def _start_vision() -> subprocess.Popen:
         "python", "-m", VISION_MODULE,
     ]
 
-    # Важно: cwd = корень репы, чтобы импорт из src работал предсказуемо
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(REPO_ROOT / "src") + os.pathsep + env.get("PYTHONPATH", "")
+
+    log_dir = REPO_ROOT / "logs"
+    log_dir.mkdir(exist_ok=True)
+    log_path = log_dir / "vision.log"
+
+    log_file = open(log_path, "a", encoding="utf-8")  # закроем в stop
+
     proc = subprocess.Popen(
         cmd,
         cwd=str(REPO_ROOT),
-        stdout=subprocess.PIPE,
+        env=env,
+        stdout=log_file,
         stderr=subprocess.STDOUT,
         text=True,
-        bufsize=1,
     )
+    proc._vision_log_file = log_file  # лёгкий хак, чтобы закрыть потом
     return proc
 
+def _stop_proc(proc: subprocess.Popen, grace_s: float = 5.0) -> None:
+    if getattr(proc, "_vision_log_file", None):
+        log_file = proc._vision_log_file
+
+    if proc.poll() is None:
+        proc.terminate()
+        try:
+            proc.wait(timeout=grace_s)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+
+    if getattr(proc, "_vision_log_file", None):
+        proc._vision_log_file.close()
 
 def _wait_vision_ready(proc: subprocess.Popen, timeout_s: float = 20.0) -> None:
     deadline = time.time() + timeout_s
@@ -65,18 +85,6 @@ def _wait_vision_ready(proc: subprocess.Popen, timeout_s: float = 20.0) -> None:
 
     raise TimeoutError(f"Vision service not ready after {timeout_s}s. Last error: {last_err}")
 
-
-def _stop_proc(proc: subprocess.Popen, grace_s: float = 5.0) -> None:
-    if proc.poll() is not None:
-        return
-
-    proc.terminate()
-    try:
-        proc.wait(timeout=grace_s)
-    except subprocess.TimeoutExpired:
-        proc.kill()
-
-
 def main() -> None:
     vision_proc = _start_vision()
     try:
@@ -88,6 +96,9 @@ def main() -> None:
     finally:
         _stop_proc(vision_proc)
 
+
+# def main():
+#     run_workcell()
 
 if __name__ == "__main__":
     main()

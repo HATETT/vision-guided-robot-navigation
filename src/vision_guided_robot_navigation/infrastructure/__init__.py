@@ -1,0 +1,1 @@
+# src/vision_guided_robot_navigation/infrastructure/__init__.py

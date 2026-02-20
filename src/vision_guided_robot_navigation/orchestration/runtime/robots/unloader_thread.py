@@ -11,7 +11,7 @@ from src.vision_guided_robot_navigation.orchestration.runtime.robots.base_robot_
 from src.vision_guided_robot_navigation.devices import CellRobot
 from src.vision_guided_robot_navigation.config.unloader.config import UnloaderConfig
 from src.vision_guided_robot_navigation.orchestration.runtime.tripods import TripodAvailabilityProvider
-from src.vision_guided_robot_navigation.orchestration.runtime import SensorAccess
+from src.vision_guided_robot_navigation.infrastructure.vision_client import VisionClient
 from src.vision_guided_robot_navigation.orchestration.runtime.robots.protocol import (
     UNLOADER_NR_NUMBERS,
     UNLOADER_NR_VALUES,
@@ -23,22 +23,6 @@ from src.vision_guided_robot_navigation.domain import (
     LoadingTripod, 
 )
 
-import random
-
-def generate_tube_coordinates():
-    """
-    Генерирует словарь tube_coordinates со случайными значениями для тестов.
-    Все координаты - числа с плавающей точкой.
-    """
-    tube_coordinates = {
-        "x": float(random.randint(-50, 50) + 300),      # float
-        "y": float(random.randint(-50, 50)),            # float
-        "z": float(random.randint(-50, 50) + 300),      # float
-        "a": round(random.uniform(-20, 20), 1),         # уже float
-        "b": round(random.uniform(-20, 20), 1),         # уже float
-        "c": round(random.uniform(-20, 20), 1) + 90     # уже float
-    }
-    return tube_coordinates
 
 class UnloaderRobotThread(BaseRobotThread):
     """
@@ -62,6 +46,7 @@ class UnloaderRobotThread(BaseRobotThread):
         self.unloader_tripods = unloader_tripods
         self.unloader_tripods_thread = unloader_tripods_thread
         self.cfg = unloader_cfg
+        self.vision = VisionClient(base_url="http://127.0.0.1:8010", timeout_s=2.0)
 
 
         self.unloader_robot.set_pose_register(
@@ -206,7 +191,9 @@ class UnloaderRobotThread(BaseRobotThread):
             while not self.stop_event.is_set():
                 # 1. Определяем основные параемтры для определения типа итерации                                                 
                 unloader_available_tripod = self.unloader_tripods_thread.get_available_tripod_name()    # Нахождение доступного трипода
-                tube_coordinates = generate_tube_coordinates()
+                # TEST: берём тестовый кадр с диска (положи файл в repo/test_data/frame.jpg)
+                result = self.vision.predict_from_file("test_data/frame.jpg")
+                tube_coordinates = result.as_dict() if result else None
 
                 if tube_coordinates:
                     current_iteration_type = UNLOADER_ITERATION_NAMES.unloading
